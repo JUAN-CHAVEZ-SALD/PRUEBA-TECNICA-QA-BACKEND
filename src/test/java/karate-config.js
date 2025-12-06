@@ -1,18 +1,22 @@
 function fn() {
-  var env = karate.env; // get system property 'karate.env'
-  karate.log('karate.env system property was:', env);
-  if (!env) {
-    env = 'dev';
+  var env = karate.env || "dev";
+
+  var Url_Base_Api_Server_Rest;
+
+  karate.log("Se realiza la ejecución en ambiente: ", env);
+
+  // Debido a que no hay mas entornos, todo se ejecutara en entorno 'dev'
+  if (env == "dev") {
+
+    Url_Base_Api_Server_Rest = "https://serverest.dev";
+
+  
+  } else {
+    throw new Error("El entorno " + env + " no es soportado");
   }
-  var config = {
-    env: env,
-    myVarName: 'someValue'
-  }
-  if (env == 'dev') {
-    // customize
-    // e.g. config.foo = 'bar';
-  } else if (env == 'e2e') {
-    // customize
-  }
-  return config;
+
+
+  return {
+    Url_Base_Api_Server_Rest
+  };
 }

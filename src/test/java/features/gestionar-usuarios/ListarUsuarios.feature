@@ -4,12 +4,15 @@ Feature: Listar Usuarios del Sistema
         * def baseUrl = Url_Base_Api_Server_Rest
         * def ListarUsuariosPath = "usuarios"
 
+        * def GeneracionDeValores = read('classpath:utils/js/generacionDeValores.js')
         * def SchemaUtils = Java.type('utils.SchemaUtils')
+
+        * def usuarioAleatorioGenerado = GeneracionDeValores.generarUsuarioValido()
 
         * def responseSchemas = read("classpath:res/gestionar-usuarios/listar-usuarios-schemas.json")
     
-    @LTU1 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Listar todos los usuarios sin filtros con validaciones completas
+    @LTU1 @regresion @smoke-test @happypath @listar-usuarios @util
+    Scenario: Listar todos los usuarios sin filtros - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
         When method get
@@ -17,26 +20,27 @@ Feature: Listar Usuarios del Sistema
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
 
     @LTU2 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Listar usuarios filtrando por nombre
+    Scenario: Listar usuarios filtrando por nombre valido - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
-        And param nome = 'Fulano'
+        And param nome = usuarioAleatorioGenerado.nome
         When method get
         Then status 200
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And assert response.usuarios.length > 0
-        And assert response.usuarios.every(usuario => usuario.nome.includes('Fulano'))
+        And assert response.usuarios.every(usuario => usuario.nome.includes(usuarioAleatorioGenerado.nome))
 
     @LTU3 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Listar usuarios filtrando por email valido
+    Scenario: Listar usuarios filtrando por email valido - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
-        And param email = 'fulano@qa.com'
+        And param email = usuarioAleatorioGenerado.email
         When method get
         Then status 200
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
+
     @LTU4 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario Outline: Listar usuarios con filtro administrador valido
+    Scenario Outline: Listar usuarios con filtro administrador valido - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
         And param administrador = <es_administrador>
@@ -50,21 +54,22 @@ Feature: Listar Usuarios del Sistema
             | "false"          |
 
     @LTU5 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Filtrar usuarios por ID específico
+    Scenario: Filtrar usuarios por id específico - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
-        And param _id = '0uxuPY0cbmQhpEz1'
+        And param _id = usuarioAleatorioGenerado._id
         When method get
         Then status 200
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
-        And assert response.usuarios.length <= 1
-        And match response.usuarios[0]._id == '0uxuPY0cbmQhpEz1'
+        # Solo un usuario debe coincidir con el ID específico como maximo
+        And assert response.usuarios.length <= 1   
+        And match response.usuarios[0]._id == usuarioAleatorioGenerado._id
 
     @LTU6 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Filtrar usuarios por password específico
+    Scenario: Filtrar usuarios por password específico - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
-        And param password = 'teste'
+        And param password = usuarioAleatorioGenerado.password
         When method get
         Then status 200
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
@@ -72,7 +77,7 @@ Feature: Listar Usuarios del Sistema
         And assert response.usuarios.every(usuario => usuario.password.toLowerCase().includes('teste'))
 
     @LTU7 @regresion @happypath @listar-usuarios
-    Scenario: Filtrar por ID no existente debe retornar lista vacía
+    Scenario: Filtrar por ID no existente debe retornar lista vacía - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
         And param _id = 'IDnoExistente12345'
@@ -83,9 +88,10 @@ Feature: Listar Usuarios del Sistema
         And assert response.quantidade == 0
 
     @LTU8 @regresion @happypath @listar-usuarios
-    Scenario: Validar estructura de respuesta sin filtros
+    Scenario: Listar Usuarios por distintas combinaciones de filtros - 200 OK
         Given url baseUrl
         And path ListarUsuariosPath
+
         When method get
         Then status 200
         * assert SchemaUtils.isValid(response, responseSchemas["200"])
@@ -94,16 +100,16 @@ Feature: Listar Usuarios del Sistema
     Scenario: Filtrar usuarios por email invalido - 400 Bad Request
         Given url baseUrl
         And path ListarUsuariosPath
-        And param email = 'qa.com'
+        And param email = GeneracionDeValores.generarCaracteresAleatorios(10)
         When method get
         Then status 400
         And assert response.email == "email deve ser um email válido"
 
     @LTU10 @regresion @smoke-test @happypath @listar-usuarios
-    Scenario: Listar usuarios con filtro administrador invalido
+    Scenario: Listar usuarios con filtro administrador invalido - 400 Bad Request
         Given url baseUrl
         And path ListarUsuariosPath
-        And param administrador = "fiefqenfjqef"
+        And param administrador = GeneracionDeValores.generarCaracteresAleatorios()
         When method get
         Then status 400
         And assert response.administrador == "administrador deve ser 'true' ou 'false'"

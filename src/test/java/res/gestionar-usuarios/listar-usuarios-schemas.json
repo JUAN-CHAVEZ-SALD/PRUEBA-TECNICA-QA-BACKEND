@@ -1,0 +1,44 @@
+{
+  "200": {
+    "type": "object",
+    "required": ["quantidade", "usuarios"],
+    "properties": {
+      "quantidade": {
+        "type": "number",
+        "minimum": 0
+      },
+      "usuarios": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["nome", "email", "password", "administrador", "_id"],
+          "properties": {
+            "nome": {
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "pattern": ".+@.+\\..+"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 1
+            },
+            "administrador": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

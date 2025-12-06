@@ -2,7 +2,11 @@ Feature: Listar Usuarios del Sistema
 
     Background:
         * def baseUrl = Url_Base_Api_Server_Rest
-        * def ListarUsuariosPath = 'usuarios'
+        * def ListarUsuariosPath = "usuarios"
+
+        * def SchemaUtils = Java.type('utils.SchemaUtils')
+
+        * def responseSchemas = read("classpath:res/gestionar-usuarios/listar-usuarios-schemas.json")
     
     @LTU1 @regresion @smoke-test @happypath @listar-usuarios
     Scenario: Listar todos los usuarios sin filtros con validaciones completas
@@ -10,6 +14,7 @@ Feature: Listar Usuarios del Sistema
         And path ListarUsuariosPath
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
 
     @LTU2 @regresion @smoke-test @happypath @listar-usuarios
     Scenario: Listar usuarios filtrando por nombre
@@ -18,8 +23,8 @@ Feature: Listar Usuarios del Sistema
         And param nome = 'Fulano'
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And assert response.usuarios.length > 0
-        And match each response.usuarios contains { nome: '#string' }
         And assert response.usuarios.every(usuario => usuario.nome.includes('Fulano'))
 
     @LTU3 @regresion @smoke-test @happypath @listar-usuarios
@@ -29,7 +34,7 @@ Feature: Listar Usuarios del Sistema
         And param email = 'fulano@qa.com'
         When method get
         Then status 200
-        
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
     @LTU4 @regresion @smoke-test @happypath @listar-usuarios
     Scenario Outline: Listar usuarios con filtro administrador valido
         Given url baseUrl
@@ -37,6 +42,7 @@ Feature: Listar Usuarios del Sistema
         And param administrador = <es_administrador>
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And match each response.usuarios contains { administrador: <es_administrador> }
         Examples:
             | es_administrador |
@@ -50,6 +56,7 @@ Feature: Listar Usuarios del Sistema
         And param _id = '0uxuPY0cbmQhpEz1'
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And assert response.usuarios.length <= 1
         And match response.usuarios[0]._id == '0uxuPY0cbmQhpEz1'
 
@@ -60,6 +67,7 @@ Feature: Listar Usuarios del Sistema
         And param password = 'teste'
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And assert response.usuarios.length > 0
         And assert response.usuarios.every(usuario => usuario.password.toLowerCase().includes('teste'))
 
@@ -70,6 +78,7 @@ Feature: Listar Usuarios del Sistema
         And param _id = 'IDnoExistente12345'
         When method get
         Then status 200
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
         And assert response.usuarios.length == 0
         And assert response.quantidade == 0
 
@@ -79,8 +88,7 @@ Feature: Listar Usuarios del Sistema
         And path ListarUsuariosPath
         When method get
         Then status 200
-        * def usuarioSchema = { nome: '#string', email: '#string', password: '#string', administrador: '#string', _id: '#string' }
-        And match each response.usuarios == usuarioSchema
+        * assert SchemaUtils.isValid(response, responseSchemas["200"])
     
     @LTU9 @regresion @smoke-test @unhappypath @listar-usuarios
     Scenario: Filtrar usuarios por email invalido - 400 Bad Request

@@ -4,23 +4,24 @@ Feature: Registrar Usuario en el Sistema
         * def baseUrl = Url_Base_Api_Server_Rest
         * def RegistrarUsuarioPath = "usuarios"
 
-        * def GeneracionDeValores = read('classpath:utils/js/generacionDeValores.js')
-        * def OperacionesConUsuarios = read('classpath:utils/js/operacionesConUsuarios.js')
-        * def SchemaUtils = Java.type('utils.SchemaUtils')
-
-        * def responseSchemas = read("classpath:res/gestionar-usuarios/registrar-usuario-schemas.json")
-
+        * def GeneracionDeValores = read('classpath:utils/js/gestionar-usuarios/generacionDeValores.js')
+        * def OperacionesConUsuarios = read('classpath:utils/js/gestionar-usuarios/operacionesConUsuarios.js')
+        
         * def usuarioValido = karate.get("usuarioValido", null)
         
         * def elFeatureEstaSiendoInvocado = usuarioValido != null 
-
+        
         * def usuarioValido = usuarioValido ? usuarioValido : GeneracionDeValores.generarUsuarioValido()
-
+        
         * def requestBody = read('classpath:req/gestionar-usuarios/body-registrar-usuario.json')
         * set requestBody.nome = usuarioValido.nome
         * set requestBody.email = usuarioValido.email
         * set requestBody.password = usuarioValido.password
         * set requestBody.administrador = usuarioValido.administrador
+        
+        * def responseSchemas = read("classpath:res/gestionar-usuarios/registrar-usuario-schemas.json")
+
+        * def SchemaUtils = Java.type('utils.SchemaUtils')
 
     @RTU1 @regresion @smoke-test @happypath @registrar-usuario @util
     Scenario: Registrar usuario con datos validos - 201 Created

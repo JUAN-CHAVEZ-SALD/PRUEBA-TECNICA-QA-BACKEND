@@ -4,8 +4,8 @@ Feature: Eliminar Usuario del Sistema
         * def baseUrl = Url_Base_Api_Server_Rest
         * def EliminarUsuarioPath = "usuarios/:idUsuario"
         
-        * def GeneracionDeValores = read('classpath:utils/js/generacionDeValores.js')
-        * def OperacionesConUsuarios = read('classpath:utils/js/operacionesConUsuarios.js')
+        * def GeneracionDeValores = read('classpath:utils/js/gestionar-usuarios/generacionDeValores.js')
+        * def OperacionesConUsuarios = read('classpath:utils/js/gestionar-usuarios/operacionesConUsuarios.js')
         
         * def idUsuario = karate.get("idUsuario", null)      
         

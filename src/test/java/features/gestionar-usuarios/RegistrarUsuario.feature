@@ -32,6 +32,8 @@ Feature: Registrar Usuario en el Sistema
         And assert SchemaUtils.isValid(response, responseSchemas["201"])
         And assert response.message == "Cadastro realizado com sucesso"
         * def IdNuevoUsuario = response._id
+        # Eliminar el usuario creado para mantener el entorno limpio si es que no fue invocado por otro feature
+        * eval if (!elFeatureEstaSiendoInvocado) OperacionesConUsuarios.eliminarUsuario(IdNuevoUsuario)
 
     @RTU2 @regresion @smoke-test @unhappypath @registrar-usuario
     Scenario Outline: Registrar usuario con algun campo vacio - 400 Bad Request

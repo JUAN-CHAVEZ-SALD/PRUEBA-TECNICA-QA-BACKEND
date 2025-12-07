@@ -1,0 +1,17 @@
+{
+  "200": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "enum": ["Registro excluído com sucesso", "Nenhum registro excluído"]
+      }
+    },
+    "required": ["message"],
+    "additionalProperties": false,
+    "examples": [
+      { "message": "Registro excluído com sucesso" },
+      { "message": "Nenhum registro excluído" }
+    ]
+  }
+}

@@ -1,9 +1,7 @@
 (function(){
 
     const UtilEscenarios_Rutas = {
-        ObtenerUsuarioPorId: "classpath:features/gestionar-usuarios/ListarUsuarios.feature@",
         RegistrarUsuario: "classpath:features/gestionar-usuarios/RegistrarUsuario.feature@RTU1",
-        ActualizarUsuario: "classpath:features/gestionar-usuarios/ActualizarUsuario.feature@",
         EliminarUsuario: "classpath:features/gestionar-usuarios/EliminarUsuario.feature@ELU1"
     }
 

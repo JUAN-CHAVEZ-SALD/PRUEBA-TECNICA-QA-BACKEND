@@ -89,13 +89,31 @@ Feature: Listar Usuarios del Sistema con o sin Filtros
         And assert response.usuarios.every(usuario => usuario.password.toLowerCase().includes(usuarioAleatorioGenerado.password.toLowerCase()))
 
     @LTU8 @regresion @happypath @listar-usuarios
-    Scenario: Listar Usuarios por distintas combinaciones de filtros - 200 OK
+    Scenario Outline: Listar Usuarios por distintas combinaciones de filtros - 200 OK
         Given url baseUrl
+        * def idUsuarioExistente = OperacionesConUsuarios.crearUsuario(usuarioAleatorioGenerado)
         And path ListarUsuariosPath
-
+        * def combinacionDeParametrosGenerada = GeneracionDeValores.generarCombinacionParametrosParaListarUsuarios(idUsuarioExistente, usuarioAleatorioGenerado, <Cantidad_Filtros>)
+        * print combinacionDeParametrosGenerada
+        * params combinacionDeParametrosGenerada
         When method get
         Then status 200
         And assert SchemaUtils.isValid(response, responseSchemas["200"])
+        And assert response.usuarios.length >= 1
+        And assert response.usuarios[0]._id == idUsuarioExistente
+        And assert response.usuarios[0].nome == usuarioAleatorioGenerado.nome
+        And assert response.usuarios[0].email == usuarioAleatorioGenerado.email
+        And assert response.usuarios[0].password == usuarioAleatorioGenerado.password
+        And assert response.usuarios[0].administrador == usuarioAleatorioGenerado.administrador
+
+        * eval OperacionesConUsuarios.eliminarUsuario(idUsuarioExistente)
+        
+        Examples:
+        | Cantidad_Filtros |
+        | 2                |
+        | 3                |
+        | 4                |
+        | 5                |
 
     @LTU7 @regresion @happypath @listar-usuarios
     Scenario: Listar usuarios con id no existente - 200 OK

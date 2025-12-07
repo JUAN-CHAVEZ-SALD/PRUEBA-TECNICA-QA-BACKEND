@@ -8,7 +8,7 @@
     function crearUsuario(usuarioValido){
 
         if(!usuarioValido || !usuarioValido.nome || !usuarioValido.email || !usuarioValido.password || !usuarioValido.administrador){
-            karate.error("[utils/js/operacionesConUsuarios.js:crearUsuario] Datos Invalidos para crear usuario");
+          return karate.error("[utils/js/operacionesConUsuarios.js:crearUsuario] Datos Invalidos para crear usuario");
         }
 
 
@@ -20,7 +20,7 @@
     function eliminarUsuario(idUsuario){
 
         if(!idUsuario){
-            karate.error("[utils/js/operacionesConUsuarios.js:eliminarUsuario] ID de usuario invalido para eliminar usuario");
+            return karate.error("[utils/js/operacionesConUsuarios.js:eliminarUsuario] ID de usuario invalido para eliminar usuario");
         }
 
         karate.call(UtilEscenarios_Rutas.EliminarUsuario, {idUsuario: idUsuario});

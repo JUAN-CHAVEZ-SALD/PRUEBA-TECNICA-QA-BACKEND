@@ -1,0 +1,37 @@
+{
+  "200": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "const": "Registro alterado com sucesso"
+      }
+    },
+    "required": ["message"],
+    "additionalProperties": false,
+    "examples": [{ "message": "Registro alterado com sucesso" }]
+  },
+  "201": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "const": "Cadastro realizado com sucesso"
+      },
+      "_id": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]+$",
+        "description": "Identificador único del recurso"
+      }
+    },
+    "required": ["message", "_id"],
+    "additionalProperties": false,
+    "examples": [
+      {
+        "message": "Cadastro realizado com sucesso",
+        "_id": "jogfODIlXsqxNFS2"
+      }
+    ]
+  }
+}

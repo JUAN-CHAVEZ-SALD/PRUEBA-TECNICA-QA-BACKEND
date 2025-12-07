@@ -1,6 +1,10 @@
-# Proyecto de Automatización de Pruebas de API con Karate
+# Prueba Técnica QA Backend - Proyecto de Automatización de Pruebas de API con Karate DSL
 
 Este proyecto contiene pruebas automatizadas para una API REST de gestión de usuarios. Las pruebas están desarrolladas con [Karate](https://github.com/karatelabs/karate), un framework de código abierto para la automatización de pruebas de API.
+
+## Autor
+
+Juan Manuel Chavez Saldaña 
 
 ## Tecnologías y Dependencias
 
@@ -91,11 +95,25 @@ mvn clean test
 
 ### Ejecutar pruebas por tags
 
-Es posible ejecutar un subconjunto de pruebas utilizando los tags de Karate. Los tags se especifican en los archivos `.feature`.
+Es posible ejecutar un subconjunto de pruebas utilizando los tags de Karate. Los tags se especifican en los archivos `.feature`. Para pasar los tags, se utiliza la propiedad `karate.options`.
 
-Por ejemplo, para ejecutar solo los escenarios de `smoke-test`, puede usar el siguiente comando, pasando el tag deseado a través de la propiedad `karate.options`:
+La sintaxis para pasar argumentos puede variar según el sistema operativo.
+
+**Windows (cmd o PowerShell):**
+
+En Windows, es una buena práctica incluir toda la propiedad `-D` entre comillas.
 
 ```sh
+# Ejemplo para ejecutar los escenarios de @smoke-test en Windows
+mvn clean test "-Dkarate.options=--tags @smoke-test"
+```
+
+**Linux / macOS:**
+
+En sistemas basados en Unix como Linux y macOS, puedes pasar el argumento sin comillas adicionales, aunque usarlas también es válido.
+
+```sh
+# Ejemplo para ejecutar los escenarios de @smoke-test en Linux/macOS
 mvn clean test -Dkarate.options="--tags @smoke-test"
 ```
 
